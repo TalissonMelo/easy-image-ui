@@ -1,12 +1,6 @@
-interface ImageCardProps {
-  name?: string;
-  size?: number;
-  uploadDate?: string;
-  url?: string;
-  extension?: string;
-}
+import { Image } from "@/app/services/image/image.resource";
 
-export const ImageCard: React.FC<ImageCardProps> = (props: ImageCardProps) => {
+export const ImageCard: React.FC<Image> = (props: Image) => {
   return (
     <div className="card relative bg-white rounded-md shadow-md transition-tranform ease-in duration-300 transform hover:shadow-lg hover:-translate-y-2">
       <img

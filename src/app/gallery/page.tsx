@@ -15,13 +15,26 @@ export default function GalleryPage() {
     setImages(result);
   }
 
+  function renderImageCard(image: Image) {
+    return (
+      <ImageCard
+        key={image.url}
+        name={image.name}
+        url={image.url}
+        size={image.size}
+        extension={image.extension}
+        uploadDate={image.uploadDate}
+      />
+    );
+  }
+
   return (
     <Template>
       <button className="bg-gray-500" onClick={searchImages}>
         Search image
       </button>
-      <section className="grid grid-cols-3 gap-8">
-        <ImageCard></ImageCard>
+      <section className="grid grid-cols-4 gap-8">
+        {images.map(renderImageCard)}
       </section>
     </Template>
   );
