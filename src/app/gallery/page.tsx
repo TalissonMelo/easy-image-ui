@@ -9,9 +9,11 @@ import { Image } from "../services/image/image.resource";
 export default function GalleryPage() {
   const useService = useImageService();
   const [images, setImages] = useState<Image[]>([]);
+  const [query, setQuery] = useState<string>("");
+  const [extension, setExtension] = useState<string>("");
 
   async function searchImages() {
-    const result = await useService.get();
+    const result = await useService.get(query, extension);
     setImages(result);
   }
 
@@ -33,11 +35,15 @@ export default function GalleryPage() {
       <section className="flex flex-col items-center justify-center my-5">
         <div className="flex space-x-4">
           <input
+            onChange={(event) => setQuery(event.target.value)}
             type="text"
             className="border ox-3 py-2 rounded-lg text-gray-900"
             placeholder="Type Name or Tags"
           />
-          <select className="border px-4 py-2 rounded-lg text-gray-900">
+          <select
+            onChange={(event) => setExtension(event.target.value)}
+            className="border px-4 py-2 rounded-lg text-gray-900"
+          >
             <option value="">All formats</option>
             <option value="PNG">PNG</option>
             <option value="JPEG">JPEG</option>
