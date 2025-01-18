@@ -5,6 +5,7 @@ import { Template } from "@/components/Template";
 import { useImageService } from "../services/image/image.service";
 import { useState } from "react";
 import { Image } from "../services/image/image.resource";
+import Link from "next/link";
 
 export default function GalleryPage() {
   const useService = useImageService();
@@ -58,9 +59,11 @@ export default function GalleryPage() {
           >
             Search
           </button>
-          <button className="bg-green-500 text-gray-900 px-4 py-2 rounded-lg hover:bg-green-300">
-            Add New
-          </button>
+          <Link href="/form">
+            <button className="bg-green-500 text-gray-900 px-4 py-2 rounded-lg hover:bg-green-300">
+              Add New
+            </button>
+          </Link>
         </div>
       </section>
       <section className="grid grid-cols-4 gap-8">
