@@ -8,6 +8,7 @@ import { Image } from "../services/image/image.resource";
 import Link from "next/link";
 import { Button } from "@/components/button/Button";
 import { InputText } from "@/components/input/InputText";
+import { useNotification } from "@/components/notification";
 
 export default function GalleryPage() {
   const useService = useImageService();
@@ -15,12 +16,17 @@ export default function GalleryPage() {
   const [query, setQuery] = useState<string>("");
   const [extension, setExtension] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const notification = useNotification();
 
   async function searchImages() {
     setLoading(true);
     const result = await useService.get(query, extension);
     setImages(result);
     setLoading(false);
+
+    if (!result.length) {
+      notification.notify("No results found!", "warning");
+    }
   }
 
   function renderImageCard(image: Image) {
