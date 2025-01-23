@@ -3,11 +3,24 @@
 import { Button } from "@/components/button/Button";
 import { InputText } from "@/components/input/InputText";
 import { RenderIf, Template } from "@/components/Template";
+import { useFormik } from "formik";
 import { useState } from "react";
+import { formScheme, LoginForm, validationScheme } from "./formScheme";
+import { FieldError } from "@/components/input/FieldError";
 
 export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const [newUserState, setNewUserState] = useState<boolean>(false);
+
+  const { values, handleChange, handleSubmit, errors } = useFormik<LoginForm>({
+    initialValues: formScheme,
+    validationSchema: validationScheme,
+    onSubmit: onSubmit,
+  });
+
+  async function onSubmit(values: LoginForm) {
+    console.log(values);
+  }
 
   return (
     <Template loading={loading}>
@@ -19,7 +32,7 @@ export default function Login() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-2">
+          <form onSubmit={handleSubmit} className="space-y-2">
             <RenderIf condition={newUserState}>
               <div>
                 <label className="block text-sm font-medium leading-6 text-gray-900">
@@ -27,8 +40,14 @@ export default function Login() {
                 </label>
               </div>
               <div className="mt-2">
-                <InputText style="w-full" id="name" />
+                <InputText
+                  style="w-full"
+                  id="name"
+                  value={values.name}
+                  onChange={handleChange}
+                />
               </div>
+              <FieldError error={errors.name} />
             </RenderIf>
 
             <div>
@@ -37,7 +56,13 @@ export default function Login() {
               </label>
             </div>
             <div className="mt-2">
-              <InputText style="w-full" id="email" />
+              <InputText
+                style="w-full"
+                id="email"
+                value={values.email}
+                onChange={handleChange}
+              />
+              <FieldError error={errors.email} />
             </div>
 
             <div>
@@ -46,7 +71,14 @@ export default function Login() {
               </label>
             </div>
             <div className="mt-2">
-              <InputText style="w-full" type="password" id="password" />
+              <InputText
+                style="w-full"
+                type="password"
+                id="password"
+                value={values.password}
+                onChange={handleChange}
+              />
+              <FieldError error={errors.password} />
             </div>
 
             <RenderIf condition={newUserState}>
@@ -56,8 +88,15 @@ export default function Login() {
                 </label>
               </div>
               <div className="mt-2">
-                <InputText style="w-full" type="password" id="passwordMatch" />
+                <InputText
+                  style="w-full"
+                  type="password"
+                  id="passwordMatch"
+                  value={values.passwordMatch}
+                  onChange={handleChange}
+                />
               </div>
+              <FieldError error={errors.passwordMatch} />
             </RenderIf>
 
             <div>
