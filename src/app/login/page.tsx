@@ -1,25 +1,68 @@
 "use client";
 
 import { Button } from "@/components/button/Button";
+import { FieldError } from "@/components/input/FieldError";
 import { InputText } from "@/components/input/InputText";
+import { useNotification } from "@/components/notification";
 import { RenderIf, Template } from "@/components/Template";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "../services/user/authentication.service";
+import { AccessToken, Credentials, User } from "../services/user/users.service";
 import { formScheme, LoginForm, validationScheme } from "./formScheme";
-import { FieldError } from "@/components/input/FieldError";
 
 export default function Login() {
   const [loading, setLoading] = useState<boolean>(false);
   const [newUserState, setNewUserState] = useState<boolean>(false);
 
-  const { values, handleChange, handleSubmit, errors } = useFormik<LoginForm>({
-    initialValues: formScheme,
-    validationSchema: validationScheme,
-    onSubmit: onSubmit,
-  });
+  const auth = useAuth();
+  const router = useRouter();
+  const notification = useNotification();
+
+  const { values, handleChange, handleSubmit, errors, resetForm } =
+    useFormik<LoginForm>({
+      initialValues: formScheme,
+      validationSchema: validationScheme,
+      onSubmit: onSubmit,
+    });
 
   async function onSubmit(values: LoginForm) {
-    console.log(values);
+    setLoading(true);
+    if (!newUserState) {
+      const credentials: Credentials = {
+        email: values.email,
+        password: values.password,
+      };
+      try {
+        const accessToken: AccessToken = await auth.authenticate(credentials);
+        console.log(accessToken);
+        router.push("/gallery");
+        setLoading(true);
+      } catch (error: any) {
+        const message = error?.message;
+        setLoading(false);
+        notification.notify(message, "error");
+      }
+    } else {
+      const user: User = {
+        email: values.email,
+        name: values.name,
+        password: values.password,
+      };
+
+      try {
+        await auth.save(user);
+        notification.notify("Success on saving user!", "success");
+        resetForm();
+        setNewUserState(false);
+        setLoading(true);
+      } catch (error: any) {
+        const message = error?.message;
+        notification.notify(message, "error");
+        setLoading(false);
+      }
+    }
   }
 
   return (

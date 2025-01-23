@@ -13,7 +13,7 @@ class AuthService {
       },
     });
 
-    if (response.status == 401) {
+    if (response.status == 400) {
       throw new Error("User or password are incorrect!");
     }
 
@@ -29,7 +29,7 @@ class AuthService {
       },
     });
 
-    if (response.status == 409) {
+    if (response.status == 400) {
       const responseError = await response.json();
       throw new Error(responseError.error);
     }
