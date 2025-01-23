@@ -36,7 +36,7 @@ export default function Login() {
       };
       try {
         const accessToken: AccessToken = await auth.authenticate(credentials);
-        console.log(accessToken);
+        auth.initSession(accessToken);
         router.push("/gallery");
         setLoading(true);
       } catch (error: any) {

@@ -1,4 +1,10 @@
-import { AccessToken, Credentials, User } from "./users.service";
+import {
+  AccessToken,
+  Credentials,
+  User,
+  UserSessionToken,
+} from "./users.service";
+import jwt from "jwt-decode";
 
 class AuthService {
   baseURL: string = "http://localhost:8080/v1/users";
@@ -33,6 +39,65 @@ class AuthService {
       const responseError = await response.json();
       throw new Error(responseError.error);
     }
+  }
+
+  initSession(token: AccessToken) {
+    if (token.accessToken) {
+      const decodedToken: any = jwt(token.accessToken);
+
+      const userSessionToken: UserSessionToken = {
+        accessToken: token.accessToken,
+        email: decodedToken.sub,
+        name: decodedToken.name,
+        expiration: decodedToken.exp,
+      };
+
+      this.setUserSession(userSessionToken);
+    }
+  }
+
+  setUserSession(userSessionToken: UserSessionToken) {
+    try {
+      localStorage.setItem(
+        AuthService.AUTH_PARAM,
+        JSON.stringify(userSessionToken)
+      );
+    } catch (error) {}
+  }
+
+  getUserSession(): UserSessionToken | null {
+    try {
+      const authString = localStorage.getItem(AuthService.AUTH_PARAM);
+      if (!authString) {
+        return null;
+      }
+
+      const token: UserSessionToken = JSON.parse(authString);
+      return token;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  isSessionValid(): boolean {
+    const userSession: UserSessionToken | null = this.getUserSession();
+    if (!userSession) {
+      return false;
+    }
+
+    const expiration: number | undefined = userSession.expiration;
+    if (expiration) {
+      const expirationDateInMillis = expiration * 1000;
+      return new Date() < new Date(expirationDateInMillis);
+    }
+
+    return false;
+  }
+
+  invalidateSession(): void {
+    try {
+      localStorage.removeItem(AuthService.AUTH_PARAM);
+    } catch (error) {}
   }
 }
 
