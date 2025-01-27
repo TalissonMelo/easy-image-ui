@@ -137,9 +137,12 @@ export default function FormPage() {
 
             <div className="mt-5 flex items-center justify-end gap-x-4">
               <Button
-                style="bg-blue-500 hover:bg-blue-300"
+                style={`bg-blue-500 hover:bg-blue-300 ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 type="submit"
                 label="Save"
+                disabled={loading}
               />
               <Link href="/gallery">
                 <Button

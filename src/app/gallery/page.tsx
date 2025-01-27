@@ -74,13 +74,6 @@ export default function GalleryPage() {
                 label="Add New"
               />
             </Link>
-            <Link href="/login">
-              <Button
-                style="bg-red-500 hover:bg-red-300"
-                type="button"
-                label="Cancel"
-              />
-            </Link>
           </div>
         </section>
         <section className="grid grid-cols-4 gap-8">
