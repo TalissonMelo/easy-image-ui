@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { RenderIf } from "./Template";
 import { useAuth } from "@/app/services/user/authentication.service";

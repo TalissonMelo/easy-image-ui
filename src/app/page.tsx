@@ -1,3 +1,5 @@
+"use client";
+
 import GalleryPage from "./gallery/page";
 import Login from "./login/page";
 import { useAuth } from "./services/user/authentication.service";
